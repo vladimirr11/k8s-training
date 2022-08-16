@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cons-to-prod-netpol
+  namespace: projectx
+spec:
+  podSelector:
+    matchLabels:
+      app: fun-facts
+      role: producer
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: fun-facts
+          role: consumer
+          
