@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: task2-backend-ss
+spec:
+  selector:
+    matchLabels:
+      app: funfacts-be
+  serviceName: funfacts-be-svc
+  replicas: 3
+  # POD template
+  template:
+    metadata:
+      labels:
+        app: funfacts-be
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: funfacts-be-con
+        image: shekeriev/k8s-facts
+        ports:
+        - name: app
+          containerPort: 5000
+        volumeMounts:
+        - name: facts-data
+          mountPath: /data
+  # VolumeClaim template
+  volumeClaimTemplates:
+  - metadata:
+      name: facts-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi
+
+# headless service          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: facts
+spec:
+  selector:
+    app: funfacts-be
+  clusterIP: None
+  ports:
+  - port: 5000
+    protocol: TCP
+
+# public service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: funfacts-be-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: funfacts-be
+  ports:
+  - port: 5000
+    protocol: TCP
+    
