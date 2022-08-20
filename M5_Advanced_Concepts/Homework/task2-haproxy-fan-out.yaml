@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-ctrl
+  annotations:
+    haproxy.org/path-rewrite: "/"
+spec:
+  ingressClassName: haproxy
+  tls:
+  - secretName: hw-task2-secret
+    hosts:
+    - task2.lab
+  rules:
+  - host: task2.lab
+    http:
+      paths:
+      - path: /service1
+        pathType: Prefix
+        backend:
+          service:
+            name: service1
+            port:
+              number: 80
+      - path: /service2
+        pathType: Prefix
+        backend:
+          service:
+            name: service2
+            port:
+              number: 80
