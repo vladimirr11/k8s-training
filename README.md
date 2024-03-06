@@ -1,2 +1,2 @@
-# k8s Training
-This repository contains manifest files created or obtained during the SoftUnis's Kubernetes training.
+# k8s course repo
+This repository contains manifest files created or obtained during the SoftUni Kubernetes training.
